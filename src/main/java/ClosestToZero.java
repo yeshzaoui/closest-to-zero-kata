@@ -1,5 +1,7 @@
 import java.util.Arrays;
-import java.util.OptionalInt;
+
+import static java.lang.Math.abs;
+import static java.lang.Math.max;
 
 public class ClosestToZero {
 
@@ -8,12 +10,19 @@ public class ClosestToZero {
             throw new IllegalArgumentException();
 
         if (numbers.length > 0) {
-            OptionalInt result = Arrays.stream(numbers).filter(n -> n != 0)
-                    .reduce((a, b) -> Math.abs(a) < Math.abs(b) ? a : (Math.abs(a) == Math.abs(b) ? Math.max(a, b) : b));
+            var result = Arrays.stream(numbers)
+                    .filter(n -> n != 0)
+                    .reduce(ClosestToZero::compare);
 
             return result.isPresent() ? result.getAsInt() : 0;
         }
 
         return 0;
+    }
+
+    private static int compare(int a, int b) {
+        if (abs(a) < abs(b)) return a;
+        if (abs(a) == abs(b)) return max(a, b);
+        return b;
     }
 }
